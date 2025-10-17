@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Iniciar sesión</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background-color: #f4f6f8;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .login-container {
+            background-color: #ffffff;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.1);
+            width: 350px;
+            text-align: center;
+        }
+
+        h2 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            margin: 8px 0;
+            border: 1px solid #ccd0d5;
+            border-radius: 6px;
+            font-size: 14px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        input:focus {
+            border-color: #007bff;
+        }
+
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 12px;
+            width: 100%;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: 500;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        .register-link {
+            margin-top: 15px;
+            font-size: 14px;
+            color: #555;
+        }
+
+        .register-link a {
+            color: #007bff;
+            text-decoration: none;
+        }
+
+        .register-link a:hover {
+            text-decoration: underline;
+        }
+
+        /* ==== MODAL ==== */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 10;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.4);
+        }
+
+        .modal-content {
+            background-color: #fff;
+            margin: 15% auto;
+            padding: 25px;
+            border-radius: 10px;
+            width: 350px;
+            text-align: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+
+        .modal-content h3 {
+            margin: 0;
+            color: #333;
+        }
+
+        .modal-content p {
+            color: #555;
+            margin-top: 10px;
+        }
+
+        .close-btn {
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-top: 15px;
+            transition: background-color 0.3s;
+            color: white;
+        }
+
+        .icon {
+            font-size: 40px;
+            margin-bottom: 10px;
+        }
+
+        /* Estilos dinámicos según tipo de error */
+        .error-red .icon { color: #dc3545; }
+        .error-red .close-btn { background-color: #dc3545; }
+        .error-red .close-btn:hover { background-color: #b02a37; }
+
+        .error-blue .icon { color: #007bff; }
+        .error-blue .close-btn { background-color: #007bff; }
+        .error-blue .close-btn:hover { background-color: #0056b3; }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <h2>Iniciar sesión</h2>
+        <form method="POST">
+            {% csrf_token %}
+            <input type="text" name="username" placeholder="Usuario" required>
+            <input type="password" name="password" placeholder="Contraseña" required>
+            <button type="submit">Ingresar</button>
+        </form>
+
+        <div class="register-link">
+            ¿No tienes una cuenta? <a href="{% url 'registro' %}">Regístrate aquí</a>
+        </div>
+    </div>
+
+    {% if error %}
+    <div id="errorModal" class="modal">
+        <div id="modalContent" class="modal-content">
+            <div class="icon">⚠️</div>
+            <h3 id="modalTitle">Error</h3>
+            <p>{{ error }}</p>
+            <button class="close-btn" onclick="cerrarModal()">Cerrar</button>
+        </div>
+    </div>
+
+    <script>
+        const modal = document.getElementById("errorModal");
+        const modalContent = document.getElementById("modalContent");
+        const modalTitle = document.getElementById("modalTitle");
+        const mensaje = `{{ error }}`;
+
+        modal.style.display = "block";
+
+        // Diferencia el color según el tipo de error
+        if (mensaje.includes("no registrado")) {
+            modalContent.classList.add("error-blue");
+            modalTitle.innerText = "Usuario no encontrado";
+            document.querySelector(".icon").textContent = "ℹ️";
+        } else {
+            modalContent.classList.add("error-red");
+            modalTitle.innerText = "Error de inicio de sesión";
+            document.querySelector(".icon").textContent = "⚠️";
+        }
+
+        function cerrarModal() {
+            modal.style.display = "none";
+        }
+
+        window.onclick = function(event) {
+            if (event.target === modal) {
+                modal.style.display = "none";
+            }
+        };
+    </script>
+    {% endif %}
+</body>
+</html>
