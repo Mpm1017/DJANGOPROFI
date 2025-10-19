@@ -1,18 +1,10 @@
 <!DOCTYPE html>
-<html lang="es">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title>Panel de Control</title>
+    <title>Panel</title>
 </head>
 <body>
-    <h1>Bienvenido al panel, {{ user.username }} 👋</h1>
-
-    <p>Has iniciado sesión correctamente.</p>
-
-    <form method="post" action="{% url 'logout' %}">
-        {% csrf_token %}
-        <button type="submit">Cerrar sesión</button>
-    </form>
+    <h1>Bienvenido al Panel</h1>
+    <a href="{% url 'logout' %}">Cerrar sesión</a>
 </body>
 </html>
-

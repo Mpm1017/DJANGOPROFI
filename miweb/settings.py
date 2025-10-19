@@ -73,21 +73,37 @@ TEMPLATES = [
 WSGI_APPLICATION = 'miweb.wsgi.application'
 
 # ================================
-# BASE DE DATOS (NEON)
+# BASE DE DATOS
 # ================================
-tmpPostgres = urlparse(os.getenv("DATABASE_URL"))
+database_url = os.getenv("DATABASE_URL")
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': tmpPostgres.path.replace('/', ''),
-        'USER': tmpPostgres.username,
-        'PASSWORD': tmpPostgres.password,
-        'HOST': tmpPostgres.hostname,
-        'PORT': 5432,
-        'OPTIONS': dict(parse_qsl(tmpPostgres.query)),
+if database_url:
+    tmpPostgres = urlparse(database_url)
+    # Aseguramos que tmpPostgres.path sea string
+    db_name = tmpPostgres.path
+    if isinstance(db_name, bytes):
+        db_name = db_name.decode('utf-8')
+    db_name = db_name.lstrip('/')  # eliminamos la barra inicial
+
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': db_name,
+            'USER': tmpPostgres.username,
+            'PASSWORD': tmpPostgres.password,
+            'HOST': tmpPostgres.hostname,
+            'PORT': tmpPostgres.port or 5432,
+            'OPTIONS': dict(parse_qsl(tmpPostgres.query)),
+        }
     }
-}
+else:
+    # Si no hay DATABASE_URL, usamos SQLite local (desarrollo)
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / "db.sqlite3",
+        }
+    }
 
 # ================================
 # VALIDACIÓN DE CONTRASEÑAS
@@ -142,3 +158,14 @@ STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 # ================================
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+import os
+from django.core.mail import send_mail
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = os.getenv('EMAIL_HOST', 'smtp.gmail.com')
+EMAIL_PORT = int(os.getenv('EMAIL_PORT', 587))
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER', 'tu_correo@gmail.com')
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD', 'tu_contraseña_o_app_password')
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER

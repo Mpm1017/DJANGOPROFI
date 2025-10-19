@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Login</title>
+    <title>Registro</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -21,7 +21,7 @@
             text-align: center;
         }
         h1 { margin-bottom: 30px; color: #333; }
-        input[type="text"], input[type="password"] {
+        input[type="text"], input[type="password"], input[type="email"] {
             width: 100%; padding: 12px; margin: 10px 0; border-radius: 8px;
             border: 1px solid #ccc; box-sizing: border-box;
         }
@@ -31,7 +31,7 @@
         }
         button:hover { background-color: #2575fc; }
         .links { margin-top: 15px; }
-        .links a { color: #c9bada; text-decoration: none; margin: 0 5px; }
+        .links a { color: #6a11cb; text-decoration: none; margin: 0 5px; }
         .links a:hover { text-decoration: underline; }
         .error-message { color: red; margin-top: 10px; }
         .success-message { color: green; margin-top: 10px; }
@@ -39,7 +39,7 @@
 </head>
 <body>
     <div class="login-container">
-        <h1>Login</h1>
+        <h1>Registro</h1>
 
         {% if error %}
             <div class="error-message">{{ error }}</div>
@@ -53,13 +53,14 @@
         <form method="POST">
             {% csrf_token %}
             <input type="text" name="username" placeholder="Usuario" required>
-            <input type="password" name="password" placeholder="Contraseña" required>
-            <button type="submit">Entrar</button>
+            <input type="email" name="email" placeholder="Correo electrónico" required>
+            <input type="password" name="password1" placeholder="Contraseña" required>
+            <input type="password" name="password2" placeholder="Repetir contraseña" required>
+            <button type="submit">Registrarse</button>
         </form>
 
         <div class="links">
-            <a href="{% url 'register' %}">Regístrate aquí</a> | 
-            <a href="{% url 'reset_password' %}">Olvidé mi contraseña</a>
+            <a href="{% url 'login' %}">Ya tengo cuenta</a>
         </div>
     </div>
 </body>
