@@ -1,37 +1,31 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-<meta charset="UTF-8">
-<title>Login</title>
 <style>
+
 /* Misma CSS que antes para estilo moderno */
-body { font-family: Arial; background: linear-gradient(to right, #6a11cb, #2575fc); height:100vh; display:flex; justify-content:center; align-items:center; }
+
+/* CORRECCIÓN APLICADA: Se añade ', sans-serif' */
+body { 
+    font-family: Arial, sans-serif; 
+    background: linear-gradient(to right, #6a11cb, #2575fc); 
+    height:100vh; 
+    display:flex; 
+    justify-content:center; 
+    align-items:center; 
+}
+
 .login-container { background:white; padding:40px; border-radius:15px; box-shadow:0px 10px 25px rgba(0,0,0,0.2); width:350px; text-align:center; }
+
 input, button { width:100%; padding:12px; margin:10px 0; border-radius:8px; }
+
 button { background:#6a11cb; color:white; border:none; cursor:pointer; font-size:16px; }
+
 button:hover { background:#2575fc; }
+
 .links a { color:#6a11cb; text-decoration:none; margin:0 5px; }
+
 .links a:hover { text-decoration:underline; }
+
 .error-message { color:red; }
+
 .success-message { color:green; }
+
 </style>
-</head>
-<body>
-<div class="login-container">
-<h1>Login</h1>
-{% for message in messages %}
-<div class="{% if message.tags %}{{ message.tags }}-message{% endif %}">{{ message }}</div>
-{% endfor %}
-<form method="POST">
-{% csrf_token %}
-<input type="text" name="username" placeholder="Usuario" required>
-<input type="password" name="password" placeholder="Contraseña" required>
-<button type="submit">Entrar</button>
-</form>
-<div class="links">
-<a href="{% url 'register' %}">Regístrate</a> | 
-<a href="{% url 'reset_password' %}">Olvidé mi contraseña</a>
-</div>
-</div>
-</body>
-</html>
