@@ -71,7 +71,7 @@
         <p>Has iniciado sesión correctamente</p>
 
         <!-- Botón logout seguro -->
-        <form method="POST" action="{% url 'usuarios:logout' %}">
+        <form method="POST" action="{% url 'logout' %}">
             {% csrf_token %}
             <button type="submit">Cerrar sesión</button>
         </form>

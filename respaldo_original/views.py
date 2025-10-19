@@ -3,13 +3,8 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
-from django.core.mail import send_mail
-from django.conf import settings
-from django.utils.crypto import get_random_string
 
-# ===========================
-# LOGIN
-# ===========================
+# Login
 def login_view(request):
     if request.method == 'POST':
         username = request.POST.get('username')
@@ -23,7 +18,7 @@ def login_view(request):
         if user:
             login(request, user)
             messages.success(request, f"Bienvenido, {user.username}")
-            return redirect('usuarios:panel')
+            return redirect('panel')
         else:
             messages.error(request, "Contraseña incorrecta.")
             return render(request, 'usuarios/login.html')
@@ -31,9 +26,7 @@ def login_view(request):
     return render(request, 'usuarios/login.html')
 
 
-# ===========================
-# REGISTRO
-# ===========================
+# Registro
 def register_view(request):
     if request.method == 'POST':
         username = request.POST.get('username')
@@ -53,50 +46,53 @@ def register_view(request):
 
         User.objects.create_user(username=username, email=email, password=password1)
         messages.success(request, "Usuario creado correctamente. Ahora inicia sesión.")
-        return redirect('usuarios:login')
+        return redirect('login')
 
     return render(request, 'usuarios/register.html')
 
 
-# ===========================
-# LOGOUT
-# ===========================
+# Logout
 def logout_view(request):
     logout(request)
     messages.success(request, "Has cerrado sesión correctamente.")
-    return redirect('usuarios:login')
+    return redirect('login')
 
 
-# ===========================
-# PANEL PROTEGIDO
-# ===========================
+# Panel protegido
 @login_required
 def panel(request):
     return render(request, 'usuarios/panel.html')
+# Olvidé mi contraseña
+def reset_password_view(request):
+    return render(request, 'usuarios/reset_password.html')
 
+
+from django.core.mail import send_mail
+from django.conf import settings
+from django.utils.crypto import get_random_string
 
 # ===========================
-# RESTABLECER CONTRASEÑA
+# RECUPERAR CONTRASEÑA
 # ===========================
 def reset_password_view(request):
     if request.method == 'POST':
         email = request.POST.get('email')
 
-        # Verificar que el correo exista
+        # 1️⃣ Verificar que el correo exista
         if not User.objects.filter(email=email).exists():
             messages.error(request, "No hay una cuenta asociada a ese correo.")
             return render(request, 'usuarios/reset_password.html')
 
-        # Crear un token simple
+        # 2️⃣ Crear un token simple
         token = get_random_string(32)
         user = User.objects.get(email=email)
-        user.last_name = token  # lo guardamos temporalmente en last_name
+        user.last_name = token  # lo guardamos temporalmente en el campo last_name
         user.save()
 
-        # Generar el enlace de restablecimiento
+        # 3️⃣ Generar el enlace de restablecimiento
         reset_link = f"http://127.0.0.1:8000/reset_password_confirm/{token}/"
 
-        # Enviar el correo
+        # 4️⃣ Enviar el correo
         send_mail(
             subject="Recupera tu contraseña",
             message=f"Hola, haz clic en este enlace para restablecer tu contraseña:\n{reset_link}",
@@ -106,17 +102,15 @@ def reset_password_view(request):
         )
 
         messages.success(request, "Te hemos enviado un enlace de recuperación a tu correo.")
-        return redirect('usuarios:login')
+        return redirect('login')
 
     return render(request, 'usuarios/reset_password.html')
-
-
 def reset_password_confirm_view(request, token):
     try:
         user = User.objects.get(last_name=token)
     except User.DoesNotExist:
         messages.error(request, "El enlace no es válido o ya ha sido usado.")
-        return redirect('usuarios:login')
+        return redirect('login')
 
     if request.method == 'POST':
         password1 = request.POST.get('password1')
@@ -131,6 +125,6 @@ def reset_password_confirm_view(request, token):
         user.save()
 
         messages.success(request, "Tu contraseña ha sido restablecida correctamente.")
-        return redirect('usuarios:login')
+        return redirect('login')
 
     return render(request, 'usuarios/reset_password_confirm.html')

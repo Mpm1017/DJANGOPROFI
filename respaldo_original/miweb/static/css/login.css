@@ -1,0 +1,75 @@
+/* ===== LOGIN - Software Contable ===== */
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #f0f4f8, #d9e4f5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+.login-container {
+    background-color: #ffffff;
+    padding: 40px 35px;
+    border-radius: 12px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+    width: 360px;
+    text-align: center;
+    border-top: 5px solid #2b5fc0;
+}
+
+.login-container h2 {
+    color: #2b5fc0;
+    margin-bottom: 20px;
+    font-weight: 600;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+}
+
+input {
+    padding: 12px;
+    margin-bottom: 15px;
+    border: 1px solid #d0d0d0;
+    border-radius: 8px;
+    font-size: 15px;
+    transition: all 0.3s ease;
+}
+
+input:focus {
+    border-color: #2b5fc0;
+    outline: none;
+    box-shadow: 0 0 5px rgba(43, 95, 192, 0.3);
+}
+
+button {
+    background-color: #2b5fc0;
+    color: #fff;
+    border: none;
+    padding: 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+button:hover {
+    background-color: #1e4ea0;
+}
+
+.error {
+    color: #c0392b;
+    margin-bottom: 10px;
+    font-size: 14px;
+}
+
+footer {
+    margin-top: 20px;
+    font-size: 13px;
+    color: #888;
+}

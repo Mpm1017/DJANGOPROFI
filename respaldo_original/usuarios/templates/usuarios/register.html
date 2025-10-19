@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Registro</title>
+<style>/* Igual que login.html */</style>
+</head>
+<body>
+<div class="login-container">
+<h1>Registro</h1>
+{% for message in messages %}
+<div class="{% if message.tags %}{{ message.tags }}-message{% endif %}">{{ message }}</div>
+{% endfor %}
+<form method="POST">
+{% csrf_token %}
+<input type="text" name="username" placeholder="Usuario" required>
+<input type="email" name="email" placeholder="Correo electrónico" required>
+<input type="password" name="password1" placeholder="Contraseña" required>
+<input type="password" name="password2" placeholder="Repetir contraseña" required>
+<button type="submit">Registrarse</button>
+</form>
+<div class="links">
+<a href="{% url 'login' %}">Ya tengo cuenta</a>
+</div>
+</div>
+</body>
+</html>
