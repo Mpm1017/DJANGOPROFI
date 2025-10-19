@@ -1,15 +1,8 @@
-# Entorno virtual
-venv/
-__pycache__/
+﻿__pycache__/
 *.pyc
-
-# Archivos de base de datos locales
 db.sqlite3
-
-# Archivos de entorno
-.env
-
-# Archivos temporales de editor
+venv/
+*.env
 *.log
-*.vscode/
-.idea/
+/staticfiles/
+.DS_Store
